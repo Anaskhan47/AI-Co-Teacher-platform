@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { GraduationCap, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, ShieldCheck, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,155 +24,171 @@ const Login = () => {
 
     try {
       const res: any = await api.post("/auth/login", { email, password });
-      // Interceptor unwraps response.data, so res = { success, data: { token, user }, error }
       if (res.success && res.data) {
         manualLogin(res.data.user, res.data.token);
       } else {
-        setError(res.error || "Credentials verification failed. Please check your institutional ID.");
+        setError(res.error || "Authentication failed. Access denied.");
         setIsLoading(false);
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message || "Credentials verification failed. Please check your institutional ID.");
+      setError(err.response?.data?.error || err.message || "Institutional connection failed.");
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 lg:p-10 selection:bg-indigo-100 font-sans">
-      <div className="w-full max-w-[1200px] grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[2.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.08)] overflow-hidden border border-slate-200/50">
-        
-        {/* Left Panel: Value Prop Architecture */}
-        <div className="hidden lg:flex flex-col justify-between p-20 bg-slate-50/50 border-r border-slate-100 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          
-          <div className="relative z-10">
-            <div className="w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-xl shadow-indigo-600/20 mb-12 transition-transform group-hover:scale-110 duration-500">
-              <GraduationCap className="w-8 h-8 text-white" />
+    <div className="min-h-screen bg-white flex overflow-hidden font-sans selection:bg-indigo-100">
+      {/* LEFT PANEL: Institutional Branding */}
+      <div className="hidden lg:flex lg:w-[420px] xl:w-[480px] bg-slate-900 relative p-12 flex-col justify-between shrink-0 border-r border-slate-800">
+        <div className="relative z-10">
+          <Link to="/" className="flex items-center gap-3 group mb-20">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20 transition-transform group-hover:scale-105">
+              <GraduationCap className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-5xl font-black text-slate-900 tracking-tighter uppercase leading-[0.85] mb-8">
-              Pioneering <br />
-              <span className="text-indigo-600 italic">Academic</span> <br />
-              Sovereignty.
-            </h1>
-            <p className="text-slate-500 font-black uppercase tracking-[0.2em] text-[10px] leading-relaxed max-w-xs italic opacity-70">
-              Institutional Nexus: The Unified Operating System for High-Performance Education.
-            </p>
-          </div>
+            <span className="font-bold text-xl text-white tracking-tight uppercase">AI Co-Teacher</span>
+          </Link>
 
-          <div className="space-y-8 relative z-10">
-            {[
-                { title: "Autonomous Synthesis", desc: "AI-driven curriculum architecture" },
-                { title: "Institutional Mastery", desc: "Aligned evaluation frameworks" },
-                { title: "Operational Intelligence", desc: "Real-time pedagogical analytics" }
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-4 animate-in slide-in-from-left duration-700" style={{ animationDelay: `${i * 100}ms` }}>
-                <div className="w-6 h-6 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 mt-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                </div>
-                <div>
-                  <h4 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">{item.title}</h4>
-                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tight mt-1">{item.desc}</p>
-                </div>
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider">
+                <ShieldCheck className="w-3 h-3" />
+                Secure Interface
               </div>
-            ))}
-          </div>
+              <h1 className="text-3xl xl:text-4xl font-bold text-white leading-[1.1] tracking-tight uppercase">
+                Welcome to the <br />
+                Instructional <br />
+                <span className="text-indigo-400 italic">Terminal</span>.
+              </h1>
+              <p className="text-slate-400 text-xs font-medium leading-relaxed max-w-xs">
+                Access your personalized workspace, synchronized with institutional 
+                standards and high-performance AI tools.
+              </p>
+            </div>
 
-          <div className="relative z-10 flex items-center gap-3">
-            <div className="px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
-                <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">
-                    v1.0.4 • Standard Edition
-                </p>
+            <div className="space-y-6 pt-8">
+              {[
+                { title: "Institutional Mastery", desc: "Aligned evaluation frameworks.", icon: Globe },
+                { title: "Unified Registry", desc: "Access all classroom assets instantly.", icon: Sparkles },
+              ].map((item, i) => (
+                <div key={i} className="flex gap-4 group">
+                  <div className="w-8 h-8 rounded-lg bg-slate-800/50 border border-slate-700/50 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:border-indigo-500 transition-all">
+                    <item.icon className="w-4 h-4 text-slate-400 group-hover:text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-slate-200 text-sm tracking-tight uppercase leading-none mb-1">{item.title}</h4>
+                    <p className="text-slate-500 text-[10px] font-medium leading-normal">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Right Panel: Auth Protocol Form */}
-        <div className="p-12 md:p-24 flex flex-col justify-center bg-white">
-          <div className="max-w-sm mx-auto w-full space-y-12">
-            <div className="space-y-3">
-              <h2 className="text-4xl font-black text-slate-900 tracking-tight uppercase leading-none">Authentication</h2>
-              <p className="text-slate-400 font-black text-[10px] uppercase tracking-[0.3em] italic">Enter Institutional Credentials</p>
+        <div className="relative z-10 text-slate-500 text-[9px] font-bold uppercase tracking-[0.3em]">
+          Version 2.4.0 • Enterprise Core
+        </div>
+      </div>
+
+      {/* RIGHT PANEL: Authentication Panel */}
+      <div className="flex-1 flex flex-col items-center justify-center p-8 md:p-12 lg:p-20 bg-slate-50 relative overflow-y-auto">
+        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-[440px] relative z-10"
+        >
+          <div className="bg-white p-8 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200/60">
+            <div className="mb-10 text-center lg:text-left">
+              <h2 className="text-2xl font-bold text-slate-900 tracking-tight uppercase mb-2">Initiate Session</h2>
+              <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em]">Authorized personnel only</p>
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-8">
+            <form onSubmit={handleLogin} className="space-y-6">
               <AnimatePresence mode="wait">
                 {error && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    className="bg-rose-50 border border-rose-100 p-5 rounded-2xl flex items-start gap-4 text-rose-600 text-[11px] font-black leading-relaxed uppercase tracking-tight shadow-sm"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-rose-50 border border-rose-100 p-4 rounded-xl flex items-center gap-3 text-rose-600 font-bold text-[11px] uppercase tracking-tight"
                   >
-                    <AlertCircle className="w-5 h-5 shrink-0" />
-                    <span>{error}</span>
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    {error}
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div className="space-y-3 group">
-                <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1 transition-colors group-focus-within:text-indigo-600" htmlFor="email">Email Access Key</Label>
-                <div className="relative">
-                  <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-indigo-600 transition-all" />
+              <div className="space-y-2">
+                <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1" htmlFor="email">Work Identifier</Label>
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors pointer-events-none" />
                   <Input
                     id="email"
                     type="email"
-                    placeholder="id@institution.edu"
-                    className="h-14 pl-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/20 transition-all font-bold text-xs"
+                    placeholder="sterling@institution.edu"
+                    className="h-12 pl-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-medium text-sm placeholder:text-slate-400"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={e => setEmail(e.target.value)}
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-3 group">
+              <div className="space-y-2">
                 <div className="flex justify-between items-center px-1">
-                  <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] transition-colors group-focus-within:text-indigo-600" htmlFor="password">Security Protocol</Label>
-                  <a href="#" className="text-[9px] font-black text-indigo-500 hover:text-indigo-700 uppercase tracking-widest transition-colors">Recovery?</a>
+                  <Label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest" htmlFor="password">Security Passkey</Label>
+                  <Link to="/forgot-password" disable className="text-[9px] font-black text-indigo-600 uppercase tracking-widest hover:text-indigo-800 transition-colors">Recover</Link>
                 </div>
-                <div className="relative">
-                  <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 group-focus-within:text-indigo-600 transition-all" />
+                <div className="relative group">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors pointer-events-none" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••••••"
-                    className="h-14 pl-14 pr-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white focus:ring-4 focus:ring-indigo-600/5 focus:border-indigo-600/20 transition-all font-bold text-xs tracking-widest"
+                    className="h-12 pl-12 pr-12 rounded-xl bg-slate-50 border-slate-200 focus:bg-white transition-all font-medium text-sm tracking-widest placeholder:tracking-normal placeholder:text-slate-400"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={e => setPassword(e.target.value)}
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-600 transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl shadow-indigo-600/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3 group relative overflow-hidden" 
+              <Button
+                type="submit"
+                className="w-full h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold uppercase tracking-[0.2em] shadow-lg shadow-indigo-600/10 border-none transition-all active:scale-[0.98] flex items-center justify-center gap-3"
                 disabled={isLoading}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                 {isLoading ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Verifying Credentials...</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Verifying Node...</>
                 ) : (
-                  <>Access Institutional Nexus</>
+                  <>Authorize Access</>
                 )}
               </Button>
             </form>
 
-            <div className="text-center pt-10 border-t border-slate-100">
-              <p className="text-slate-400 font-black text-[9px] uppercase tracking-[0.2em]">
-                New to the network?{" "}
-                <Link to="/signup" className="text-indigo-600 hover:text-indigo-800 transition-colors ml-1 border-b border-indigo-600/30">Request Access</Link>
+            <div className="text-center mt-10 pt-8 border-t border-slate-100">
+              <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">
+                Unauthorized?{" "}
+                <Link to="/signup" className="text-indigo-600 hover:text-indigo-800 transition-colors ml-2 font-black border-b border-indigo-600/20 pb-0.5">Request Account</Link>
               </p>
             </div>
           </div>
-        </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-slate-400 text-[9px] font-medium uppercase tracking-[0.25em]">
+              Encrypted Session • SEC-402 Compliant
+            </p>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

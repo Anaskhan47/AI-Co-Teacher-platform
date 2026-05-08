@@ -80,7 +80,7 @@ const Navbar = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-40 md:hidden"
             />
 
             {/* Drawer */}
@@ -89,14 +89,17 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 h-full w-[260px] bg-white z-50 md:hidden flex flex-col shadow-2xl"
+              className="fixed left-0 top-0 h-full w-[300px] bg-white z-50 md:hidden flex flex-col shadow-[0_0_100px_rgba(0,0,0,0.3)] border-r border-slate-200"
             >
-              <div className="h-20 px-6 flex items-center justify-between border-b border-slate-100">
+              <div className="h-20 px-6 flex items-center justify-between border-b border-slate-100 shrink-0">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
-                    <GraduationCap className="w-5 h-5" />
+                  <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-600/20">
+                    <GraduationCap className="w-6 h-6" />
                   </div>
-                  <span className="text-slate-900 font-black text-sm tracking-tight uppercase">Mission Control</span>
+                  <div>
+                    <span className="text-slate-900 font-black text-sm tracking-tight uppercase block leading-none">Mission Control</span>
+                    <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mt-1 block">Neural Interface v1.0</span>
+                  </div>
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}

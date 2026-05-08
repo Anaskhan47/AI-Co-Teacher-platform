@@ -19,19 +19,19 @@ const Hero = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white text-slate-700 text-[10px] font-black uppercase tracking-[0.2em] mb-12 border border-slate-200 backdrop-blur-md">
-            <Sparkles className="w-4 h-4 text-indigo-400" />
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white text-slate-700 text-[9px] font-black uppercase tracking-[0.2em] mb-8 md:mb-12 border border-slate-200 backdrop-blur-md shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
             <span>AI-Powered Education Platform</span>
           </div>
 
-          <h1 className="text-5xl md:text-8xl font-black leading-[0.9] mb-12 text-slate-900 tracking-tighter uppercase">
+          <h1 className="text-4xl md:text-8xl font-black leading-[0.95] md:leading-[0.9] mb-10 md:mb-12 text-slate-900 tracking-tighter uppercase">
             Plan Less, <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-blue-400 to-cyan-400 italic relative inline-block">
               Teach More
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl mb-16 max-w-3xl mx-auto leading-relaxed text-slate-500 font-bold tracking-tight">
+          <p className="text-lg md:text-2xl mb-12 md:mb-16 max-w-3xl mx-auto leading-relaxed text-slate-500 font-bold tracking-tight px-4 md:px-0">
             Instantly generate curriculum-aligned lesson plans, quizzes, and worksheets 
             tailored to your classroom. Join 50,000+ elite educators worldwide.
           </p>
