@@ -740,7 +740,11 @@ export function AIAssistantTab({ initialMode = "lesson", preloadedResult }: AIAs
             </div>
             
             {/* Overlay Systems */}
-            <QuickActionDialog open={showQuickAction} onOpenChange={setShowQuickAction} />
+            <QuickActionDialog 
+                open={showQuickAction} 
+                onOpenChange={setShowQuickAction} 
+                contentToProcess={result ? JSON.stringify(result) : ""}
+            />
         </div>
     );
 }

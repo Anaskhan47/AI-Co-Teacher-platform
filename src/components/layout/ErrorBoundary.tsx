@@ -79,7 +79,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </Button>
             </div>
             
-            {IS_DEV && (
+            {(IS_DEV || window.location.search.includes('debug=true')) && (
                 <div className="mt-8 p-4 bg-black/40 rounded-xl text-left border border-white/5 overflow-auto max-h-40">
                     <pre className="text-[9px] font-mono text-rose-300/60 leading-tight">
                         {this.state.error?.stack}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AIAssistantTab } from "./AIAssistantTab";
 import { LessonsTab } from "./LessonsTab";
 import { Sparkles, BookOpen } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AILessonPlanGeneratorTabProps {
     initialMode?: "lesson" | "material" | "quiz";

@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface QuickActionDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    contentToProcess: string;
+    contentToProcess?: string;
 }
 
 export function QuickActionDialog({ open, onOpenChange, contentToProcess }: QuickActionDialogProps) {
