@@ -28,14 +28,22 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:8080,h
 
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin (e.g. curl)
+        // Allow requests with no origin (e.g. curl, mobile apps)
         if (!origin) return callback(null, true);
         
-        // Match localhost with any port in development
+        // Match localhost with any port in development for ease of use
         if (origin.startsWith('http://localhost:')) return callback(null, true);
 
+        // Strict matching for production domains
         if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
-        callback(null, true); // Fallback for dynamic deployment URLs on Vercel
+        
+        // Production fallback: If in production, be stricter. In dev, allow fallback.
+        if (NODE_ENV === 'production') {
+            console.error(`[SECURITY] Blocked CORS request from unauthorized origin: ${origin}`);
+            return callback(new Error('Not allowed by CORS'));
+        }
+        
+        callback(null, true);
     },
     credentials: true,
 }));

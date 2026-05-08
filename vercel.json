@@ -23,11 +23,6 @@
       "dest": "backend/uploads/$1"
     },
     {
-      "src": "/(.*)",
-      "dest": "/$1",
-      "check": true
-    },
-    {
       "handle": "filesystem"
     },
     {
