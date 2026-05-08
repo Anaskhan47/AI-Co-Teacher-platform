@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Co-Teacher | Neural Command Center</title>
+  
+  <!-- Critical Pre-rendering Styles (FOUC Prevention) -->
+  <style>
+    :root {
+      --bg-slate-950: #020617;
+      --indigo-600: #4f46e5;
+    }
+    html, body {
+      background-color: var(--bg-slate-950) !important;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    #root-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-slate-950);
+      z-index: 9999;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .splash-logo {
+      width: 80px;
+      height: 80px;
+      background: var(--indigo-600);
+      border-radius: 24px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 50px rgba(79, 70, 229, 0.4);
+      animation: splash-pulse 2s infinite ease-in-out;
+    }
+    .splash-text {
+      color: #94a3b8;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.4em;
+      animation: splash-fade 2s infinite;
+    }
+    @keyframes splash-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+    @keyframes splash-fade {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root">
+    <!-- Fail-Safe Initial UI -->
+    <div id="root-splash">
+      <div class="splash-logo">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <div class="splash-text">Synchronizing Systems...</div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * MISSION CRITICAL: Splash Screen Failsafe
+     * Ensures splash removal after 5s even if React fails to hydrate or mount.
+     */
+    (function() {
+      const splash = document.getElementById('root-splash');
+      if (splash) {
+        setTimeout(() => {
+          splash.style.transition = 'opacity 0.8s ease-out';
+          splash.style.opacity = '0';
+          setTimeout(() => {
+            if (splash.parentNode) splash.parentNode.removeChild(splash);
+          }, 800);
+        }, 5000); 
+      }
+    })();
+  </script>
+
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

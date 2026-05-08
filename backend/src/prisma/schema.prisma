@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(TEACHER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  lessonPlans  LessonPlan[]
+  assignments  Assignment[]
+  sentMessages Message[]    @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+  student      Student?
+  attendance   Attendance[] @relation("TeacherAttendance")
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+model Curriculum {
+  id       String    @id @default(uuid())
+  board    BoardType
+  grade    Int       // 1-12
+  subjects Subject[]
+
+  @@unique([board, grade])
+}
+
+enum BoardType {
+  CBSE
+  ICSE
+  SSC
+}
+
+model Subject {
+  id           String     @id @default(uuid())
+  name         String
+  curriculumId String
+  curriculum   Curriculum @relation(fields: [curriculumId], references: [id])
+  chapters     Chapter[]
+  lessonPlans  LessonPlan[]
+  assignments  Assignment[]
+
+  @@unique([curriculumId, name])
+  @@index([curriculumId])
+}
+
+model Chapter {
+  id        String   @id @default(uuid())
+  name      String
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id])
+  topics    Topic[]
+
+  @@unique([subjectId, name])
+  @@index([subjectId])
+}
+
+model Topic {
+  id        String    @id @default(uuid())
+  name      String
+  chapterId String
+  chapter   Chapter   @relation(fields: [chapterId], references: [id])
+  lessons   LessonPlan[]
+  quizzes   Quiz[]
+  assignments Assignment[]
+
+  @@unique([chapterId, name])
+  @@index([chapterId])
+}
+
+model LessonPlan {
+  id          String   @id @default(uuid())
+  title       String
+  objective   String
+  duration    Int      // in minutes
+  activities  String   // JSON string or long text
+  homework    String?
+  resources   String?
+  status      String   @default("DRAFT") // DRAFT, PUBLISHED
+  teacherId   String
+  teacher     User     @relation(fields: [teacherId], references: [id])
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  topicId     String
+  topic       Topic    @relation(fields: [topicId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([teacherId, updatedAt])
+  @@index([subjectId])
+  @@index([topicId])
+}
+
+model Assignment {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  fileUrl     String?
+  dueDate     DateTime?
+  maxScore    Float?   @default(100)
+  
+  // AI content storage
+  assignmentQuestions Json?
+  activityQuestions   Json?
+  answers             Json?
+  
+  teacherId   String
+  teacher     User     @relation(fields: [teacherId], references: [id])
+  subjectId   String?
+  subject     Subject? @relation(fields: [subjectId], references: [id])
+  topicId     String?
+  topic       Topic?   @relation(fields: [topicId], references: [id])
+  classId     String?  // Simplified class name/id
+  grade       Int?
+  
+  source      String   @default("MANUAL") // MANUAL, AI
+  status      String   @default("PUBLISHED")
+  
+  submissions Submission[]
+  createdAt   DateTime @default(now())
+
+  @@index([teacherId, createdAt])
+  @@index([subjectId])
+  @@index([topicId])
+}
+
+model Submission {
+  id           String     @id @default(uuid())
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id])
+  studentId    String
+  student      Student    @relation(fields: [studentId], references: [id])
+  fileUrl      String?
+  content      String?
+  feedback     String?
+  grade        Float?
+  submittedAt  DateTime   @default(now())
+
+  @@index([assignmentId])
+  @@index([studentId])
+}
+
+model Student {
+  id          String       @id @default(uuid())
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id])
+  grade       Int
+  section     String?
+  parentId    String?
+  attendance  Attendance[]
+  submissions Submission[]
+  grades      AssessmentGrade[]
+
+  @@index([grade, section])
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  date      DateTime @default(now())
+  status    String   // PRESENT, ABSENT, LATE
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  teacherId String
+  teacher   User     @relation("TeacherAttendance", fields: [teacherId], references: [id])
+  classId   String   // Grouping for sessions
+
+  @@index([teacherId, date])
+  @@index([studentId, date])
+  @@index([classId, date])
+}
+
+model Quiz {
+  id        String   @id @default(uuid())
+  title     String
+  topicId   String
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  questions Json     // Array of objects
+  createdAt DateTime @default(now())
+
+  @@index([topicId, createdAt])
+}
+
+model AssessmentGrade {
+  id           String   @id @default(uuid())
+  studentId    String
+  student      Student  @relation(fields: [studentId], references: [id])
+  type         String   // QUIZ, ASSIGNMENT, EXAM
+  referenceId  String   // ID of the quiz/assignment
+  score        Float
+  maxScore     Float
+  gradedAt     DateTime @default(now())
+
+  @@index([studentId, gradedAt])
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  content     String
+  senderId    String
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId  String
+  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  createdAt   DateTime @default(now())
+  isRead      Boolean  @default(false)
+
+  @@index([senderId, createdAt])
+  @@index([receiverId, createdAt])
+}
