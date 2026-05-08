@@ -1,4 +1,4 @@
-# AI Co-Teacher 🎓
+# AI Co-Teacher 🎓 [Deployment: Stable]
 
 **AI-powered teaching assistant** — generate lesson plans, quizzes, assignments, presentations, and data analysis reports in seconds.
 
