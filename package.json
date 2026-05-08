@@ -14,7 +14,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "server": "ts-node-dev --respawn --transpile-only backend/src/server.ts",
-    "dev:all": "concurrently \"npm run dev\" \"npm run server\""
+    "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
+    "postinstall": "prisma generate --schema=backend/src/prisma/schema.prisma",
+    "build:vercel": "prisma generate --schema=backend/src/prisma/schema.prisma && vite build"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
