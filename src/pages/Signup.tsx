@@ -24,10 +24,16 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const res = await api.post("/auth/register", { name, email, password, role: "TEACHER" });
-      manualLogin(res.data.user, res.data.token);
+      const res: any = await api.post("/auth/register", { name, email, password, role: "TEACHER" });
+      // Interceptor unwraps response.data, so res = { success, data: { token, user }, error }
+      if (res.success && res.data) {
+        manualLogin(res.data.user, res.data.token);
+      } else {
+        setError(res.error || "Registration failed. Try a different email.");
+        setIsLoading(false);
+      }
     } catch (err: any) {
-      setError(err.response?.data?.error || "Registration failed. Try a different email.");
+      setError(err.response?.data?.error || err.message || "Registration failed. Try a different email.");
       setIsLoading(false);
     }
   };
