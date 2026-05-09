@@ -35,7 +35,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   private handleReset = () => {
     this.setState({ hasError: false, error: null });
-    window.location.reload();
+    // Removed automatic reload to prevent infinite loop on persistent failures
   };
 
   private handleGoHome = () => {
