@@ -118,7 +118,7 @@ const TeacherDashboard = () => {
     <div className="space-y-8 animate-in fade-in duration-700">
       {/* Local Tab Navigation (Desktop Only, since Sidebar handles main nav) */}
       <div className="flex items-center gap-2 p-1.5 bg-white border border-slate-200 rounded-2xl w-fit">
-        {menuItems.slice(0, 5).map((item) => (
+        {(Array.isArray(menuItems) ? menuItems : []).slice(0, 5).map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
@@ -143,7 +143,7 @@ const TeacherDashboard = () => {
                 <div key={i} className="h-32 rounded-2xl bg-white border border-slate-100 animate-pulse" />
               ))
             ) : (
-              stats.map((stat, index) => (
+            {(Array.isArray(stats) ? stats : []).map((stat, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 10 }}
@@ -176,7 +176,7 @@ const TeacherDashboard = () => {
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">High-performance AI synthesis modules</p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {quickActions.map((action, i) => (
+                  {(Array.isArray(quickActions) ? quickActions : []).map((action, i) => (
                     <button 
                       key={i}
                       onClick={() => {
@@ -207,7 +207,7 @@ const TeacherDashboard = () => {
                   {lessonsLoading ? (
                     <div className="h-40 flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-indigo-600" /></div>
                   ) : (
-                    lessons?.slice(0, 5).map((lesson: any) => (
+                    {(Array.isArray(lessons) ? lessons : []).slice(0, 5).map((lesson: any) => (
                       <div key={lesson.id} className="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-slate-50 transition-all cursor-pointer group">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-lg bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 shadow-sm">

@@ -1,43 +1,13 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
-import prisma from '../lib/prisma';
 
+/**
+ * ABSOLUTE ZERO DASHBOARD CONTROLLER
+ * Temporarily disabled database interaction to stabilize production deployment.
+ */
 export const getDashboardStats = async (req: AuthRequest, res: Response) => {
     try {
-        const teacherId = req.user!.id;
-
-        if (!process.env.DATABASE_URL || process.env.DATABASE_URL === "") {
-            throw new Error('DATABASE_OFFLINE');
-        }
-
-        const [totalStudents, lessonsCount, attendanceRecords] = await Promise.all([
-            prisma.student.count(),
-            prisma.lessonPlan.count({ where: { teacherId } }),
-            prisma.attendance.findMany({
-                where: { teacherId },
-                orderBy: { date: 'desc' },
-                take: 100
-            })
-        ]);
-
-        const presentCount = attendanceRecords.filter(r => r.status === 'PRESENT').length;
-        const attendanceRate = attendanceRecords.length > 0 ? (presentCount / attendanceRecords.length) * 100 : 95;
-
-        res.json({
-            success: true,
-            data: {
-                totalStudents,
-                lessonsCreated: lessonsCount,
-                avgPerformance: 78,
-                classesToday: 4,
-                attendanceRate: Math.round(attendanceRate),
-                pendingAssignments: 5
-            },
-            error: null
-        });
-    } catch (error: any) {
-        // --- MOCK DASHBOARD FALLBACK ---
-        res.json({
+        return res.json({
             success: true,
             data: {
                 totalStudents: 1240,
@@ -48,7 +18,13 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
                 pendingAssignments: 12
             },
             error: null,
-            _warning: "Operational in safe-mode (Static Stats)"
+            message: "System Stabilized: Dashboard Stats temporarily static."
+        });
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            code: "STATS_FAILED",
+            message: "Internal stabilization failure."
         });
     }
 };

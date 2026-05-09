@@ -238,7 +238,7 @@ export function StudentsTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {students?.map((student: any) => (
+              {(Array.isArray(students) ? students : []).map((student: any) => (
                 <tr
                   key={student.id}
                   className="h-20 hover:bg-slate-50/30 transition-all group"
