@@ -1,4 +1,5 @@
 import app from "../backend/src/app";
-import serverless from "serverless-http";
 
-export default serverless(app);
+// Vercel handles Express apps natively. 
+// Exporting the app directly is more stable than using a serverless-http wrapper.
+export default app;
