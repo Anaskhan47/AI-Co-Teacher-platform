@@ -58,9 +58,10 @@ export class ErrorBoundary extends Component<Props, State> {
               <AlertTriangle className="w-10 h-10 text-rose-500" />
             </div>
 
-            <h2 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase leading-none">Something Went Wrong</h2>
+            <h2 className="text-3xl font-black text-white mb-4 tracking-tighter uppercase leading-none">System Interrupt</h2>
             <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] mb-10 leading-relaxed">
-              A critical rendering error occurred in the <span className="text-rose-400">{this.props.name || 'Core'}</span> subsystem. Mission control has been notified.
+              The <span className="text-rose-400">{String(this.props.name || 'Core')}</span> subsystem encountered a non-standard protocol. 
+              {this.state.error && <span className="block mt-2 text-rose-300/60 lowercase italic">{String(this.state.error.message || this.state.error)}</span>}
             </p>
 
             <div className="space-y-4 relative z-10">
