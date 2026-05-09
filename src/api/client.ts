@@ -26,8 +26,11 @@ api.interceptors.response.use(
         return response.data;
     },
     (error) => {
-        const errorMsg = error.response?.data?.error || error.message || 'System error occurred';
-        
+        const errorData = error.response?.data;
+        const errorMessage = typeof errorData?.error === 'string' 
+            ? errorData.error 
+            : (errorData?.error?.message || error.message || "Protocol Failure");
+            
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('user_data');
@@ -35,10 +38,8 @@ api.interceptors.response.use(
             if (!window.location.pathname.includes('/login')) {
                 window.location.href = '/login';
             }
-        } else if (error.response?.status === 403) {
-            toast.error("Security: Access denied to this protocol.");
         } else {
-            toast.error(errorMsg);
+            toast.error(errorMessage);
         }
         
         return Promise.reject(error);
