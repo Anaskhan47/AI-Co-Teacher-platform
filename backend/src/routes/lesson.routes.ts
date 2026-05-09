@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { getLessons, getLessonById, createLesson, updateLesson, deleteLesson, summarizeLesson, summarizePDF } from '../controllers/lesson.controller';
-import { authenticate } from '../middleware/auth.middleware';
-import { upload } from '../middleware/upload.middleware';
+import { getLessons, getLessonById, createLesson, updateLesson, deleteLesson, summarizeLesson, summarizePDF } from '../controllers/lesson.controller.js';
+import { authenticate } from '../middleware/auth.middleware.js';
+import { upload } from '../middleware/upload.middleware.js';
 
 const router = Router();
 

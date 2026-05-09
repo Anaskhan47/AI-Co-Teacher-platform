@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import prisma from '../lib/prisma';
-import { AuthRequest } from '../middleware/auth.middleware';
+import prisma from '../lib/prisma.js';
+import { AuthRequest } from '../middleware/auth.middleware.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'emergency_fallback_secret_for_stability_only';
 
