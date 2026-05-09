@@ -1,3 +1,4 @@
-import app from '../backend/src/app';
+import app from "../backend/src/app";
+import serverless from "serverless-http";
 
-export default app;
+export default serverless(app);
