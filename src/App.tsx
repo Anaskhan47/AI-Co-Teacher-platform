@@ -21,26 +21,21 @@ const queryClient = new QueryClient();
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* NUCLEAR BYPASS: Redirect Root to Dashboard */}
-      <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
-      
-      {/* Public Pages */}
+      {/* FLAT ROUTING: Dashboard is the Root */}
+      <Route path="/" element={<AppLayout />}>
+        <Route index element={<TeacherDashboard />} />
+        <Route path="dashboard" element={<TeacherDashboard />} />
+        <Route path="app/dashboard" element={<Navigate to="/" replace />} />
+      </Route>
+
+      {/* Public / Auth Pages (Accessible but not forced) */}
+      <Route path="/home" element={<Index />} />
       <Route path="/pricing" element={<PricingPage />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/for-teachers" element={<ForTeachers />} />
-
-      {/* Auth Pages (Kept for routing but accessible) */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-
-      {/* UNGUARDED DASHBOARD ACCESS */}
-      <Route path="/app" element={<AppLayout />}>
-        <Route path="dashboard" element={<TeacherDashboard />} />
-        <Route path="*" element={<Navigate to="dashboard" replace />} />
-      </Route>
-
       <Route path="/quiz/:id" element={<QuizPage />} />
-      <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
