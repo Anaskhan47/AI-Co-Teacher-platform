@@ -42,9 +42,15 @@ const StudentDashboard = () => {
   const { data: dashboardData, isLoading } = useQuery({
     queryKey: ['student-dashboard'],
     queryFn: async () => {
-      const res = await api.get('/student-dashboard/dashboard');
-      return res.data;
-    }
+      try {
+        const res = await api.get('/student-dashboard/dashboard');
+        return res.data || res;
+      } catch (err) {
+        return null;
+      }
+    },
+    retry: 0,
+    refetchOnWindowFocus: false
   });
 
   if (isLoading) {
@@ -60,15 +66,15 @@ const StudentDashboard = () => {
   }
 
   const stats = [
-    { label: "Lessons Completed", value: dashboardData?.stats.lessonsCompleted || "0", icon: BookOpen, color: "text-indigo-400", bg: "bg-indigo-500/10" },
-    { label: "Assignments Due", value: dashboardData?.stats.assignmentsDue || "0", icon: FileText, color: "text-amber-400", bg: "bg-amber-500/10" },
-    { label: "Average Score", value: (dashboardData?.stats.avgScore || "0") + "%", icon: Award, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-    { label: "Attendance", value: (dashboardData?.stats.attendanceRate || "0") + "%", icon: Calendar, color: "text-blue-400", bg: "bg-blue-500/10" },
+    { label: "Lessons Completed", value: String(dashboardData?.stats?.lessonsCompleted || "0"), icon: BookOpen, color: "text-indigo-400", bg: "bg-indigo-500/10" },
+    { label: "Assignments Due", value: String(dashboardData?.stats?.assignmentsDue || "0"), icon: FileText, color: "text-amber-400", bg: "bg-amber-500/10" },
+    { label: "Average Score", value: String(dashboardData?.stats?.avgScore || "0") + "%", icon: Award, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+    { label: "Attendance", value: String(dashboardData?.stats?.attendanceRate || "0") + "%", icon: Calendar, color: "text-blue-400", bg: "bg-blue-500/10" },
   ];
 
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans overflow-hidden">
-      {/* Sidebar */}
+      {/* Sidebar handles main nav */}
       <aside className="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col fixed h-full z-40">
         <div className="p-10 flex items-center gap-4">
           <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-2xl shadow-indigo-600/20">
@@ -81,7 +87,7 @@ const StudentDashboard = () => {
           <div className="pb-4">
             <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Student Portal</p>
           </div>
-          {menuItems.map((item) => (
+          {(Array.isArray(menuItems) ? menuItems : []).map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
@@ -116,19 +122,10 @@ const StudentDashboard = () => {
                   Active Profile
                 </div>
                 <h1 className="text-xl lg:text-3xl font-black tracking-tight text-slate-900 leading-none">
-                  Hello, <span className="text-indigo-600">{dashboardData?.profile?.user?.name?.split(' ')[0] || 'Student'}</span>
+                  Hello, <span className="text-indigo-600">{String(dashboardData?.profile?.user?.name?.split(' ')[0] || 'Student')}</span>
                 </h1>
                 <p className="text-slate-500 text-xs hidden lg:block font-medium mt-1">Track lessons, assignments, and progress in one place.</p>
               </div>
-            </div>
-            <div className="hidden sm:flex items-center gap-6">
-               <div className="flex flex-col items-end">
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Academic Rank</span>
-                    <div className="flex items-center gap-3 bg-slate-900 px-5 py-2.5 rounded-2xl">
-                        <Trophy className="w-4 h-4 text-amber-500" />
-                        <span className="text-white font-black text-xs uppercase tracking-widest leading-none pt-0.5">Grade {dashboardData?.profile?.grade || 'N/A'}-{dashboardData?.profile?.section || 'N/A'}</span>
-                    </div>
-               </div>
             </div>
           </div>
         </header>
@@ -136,7 +133,7 @@ const StudentDashboard = () => {
         <div className="max-w-[1600px] mx-auto p-10 space-y-10 relative z-10">
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+            {(Array.isArray(stats) ? stats : []).map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -150,7 +147,7 @@ const StudentDashboard = () => {
                         <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">{stat.label}</p>
                         <h3 className="text-4xl font-black text-white tracking-tighter leading-none">{stat.value}</h3>
                         <div className="w-8 h-1 bg-white/5 rounded-full overflow-hidden">
-                            <div className={`h-full ${stat.bg.replace('/10', '')} transition-all`} style={{ width: '60%' }} />
+                            <div className={`h-full bg-indigo-500 transition-all`} style={{ width: '60%' }} />
                         </div>
                       </div>
                       <div className={`w-14 h-14 rounded-2xl ${stat.bg} border border-white/5 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500`}>
@@ -173,16 +170,16 @@ const StudentDashboard = () => {
                 <Button variant="ghost" className="text-indigo-400 font-black uppercase tracking-widest text-[10px] hover:bg-indigo-500/10 hover:text-indigo-300">Open Catalog <ChevronRight className="w-4 h-4 ml-2" /></Button>
               </div>
               <div className="space-y-6">
-                {dashboardData?.lessons.map((lesson: any) => (
+                {(Array.isArray(dashboardData?.lessons) ? dashboardData.lessons : []).map((lesson: any) => (
                   <div key={lesson.id} className="p-6 rounded-[2rem] bg-white/5 border border-white/5 hover:border-indigo-500/30 hover:bg-white/10 transition-all cursor-pointer group flex items-center justify-between">
                     <div className="flex items-center gap-6">
                         <div className="w-16 h-16 rounded-[1.25rem] bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-xl">
                           <BookOpen className="w-7 h-7" />
                         </div>
                         <div>
-                          <h4 className="font-black text-white text-xl tracking-tight mb-1">{lesson.title}</h4>
+                          <h4 className="font-black text-white text-xl tracking-tight mb-1">{String(lesson.title || "Untitled")}</h4>
                           <div className="flex items-center gap-3">
-                            <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{lesson.subject?.name || 'General'}</span>
+                            <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{String(lesson.subject?.name || 'General')}</span>
                             <span className="w-1 h-1 rounded-full bg-white/10" />
                             <span className="text-[10px] text-indigo-500/60 font-black uppercase tracking-widest">Active Lesson</span>
                           </div>
@@ -201,46 +198,19 @@ const StudentDashboard = () => {
                     <Clock className="w-5 h-5 text-amber-500" />
                 </div>
                 <div className="space-y-6">
-                  {dashboardData?.assignments.map((asn: any) => (
+                  {(Array.isArray(dashboardData?.assignments) ? dashboardData.assignments : []).map((asn: any) => (
                     <div key={asn.id} className="flex items-center justify-between p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all group">
                       <div className="flex items-center gap-5">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${asn.submissions.length > 0 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'} border`}>
-                          {asn.submissions.length > 0 ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${asn.submissions?.length > 0 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'} border`}>
+                          {asn.submissions?.length > 0 ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
                         </div>
                         <div>
-                          <p className="font-black text-white text-sm tracking-tight mb-0.5">{asn.title}</p>
+                          <p className="font-black text-white text-sm tracking-tight mb-0.5">{String(asn.title || "Assignment")}</p>
                           <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest">Terminating: {new Date(asn.dueDate).toLocaleDateString()}</p>
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm" className="font-black text-[9px] uppercase tracking-widest text-indigo-400 hover:bg-indigo-500/10 hover:text-indigo-300">
-                        {asn.submissions.length > 0 ? 'Results' : 'Upload'}
-                      </Button>
                     </div>
                   ))}
-                </div>
-              </Card>
-
-              <Card className="border-none shadow-[0_0_80px_rgba(79,70,229,0.2)] bg-gradient-to-br from-indigo-600 to-violet-700 p-10 rounded-[3rem] text-white relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:scale-150 transition-transform duration-1000" />
-                <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-10">
-                    <h3 className="text-2xl font-black font-display uppercase tracking-tighter">Performance</h3>
-                    <BarChart3 className="w-6 h-6 opacity-50" />
-                    </div>
-                    <div className="space-y-5">
-                    {dashboardData?.profile?.grades?.slice(0, 3).map((grade: any) => (
-                        <div key={grade.id} className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 group-hover:bg-white/20 transition-all">
-                        <span className="font-black text-xs uppercase tracking-widest">{grade.type}</span>
-                        <div className="flex flex-col items-end">
-                            <span className="font-black text-lg tracking-tighter">{grade.score}/{grade.maxScore}</span>
-                            <span className="text-[8px] font-black text-white/50 uppercase tracking-[0.2em]">Verified Score</span>
-                        </div>
-                        </div>
-                    ))}
-                    {dashboardData?.profile.grades.length === 0 && (
-                        <p className="text-indigo-100 text-xs font-black uppercase tracking-widest opacity-60 text-center py-4">No assessments indexed.</p>
-                    )}
-                    </div>
                 </div>
               </Card>
             </div>
