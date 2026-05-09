@@ -108,7 +108,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
     res.status(500).json({ 
         success: false,
         data: null,
-        error: err.message || "Internal Server Error"
+        error: typeof err.message === 'string' ? err.message : "Internal Server Error"
     });
 });
 

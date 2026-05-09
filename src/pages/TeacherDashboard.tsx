@@ -88,10 +88,10 @@ const TeacherDashboard = () => {
   });
 
   const stats = [
-    { label: "Total Students", value: dashboardStats?.totalStudents || "0", change: "+12% Periodicity", icon: Users, iconColor: "text-indigo-600" },
-    { label: "Plans Created", value: dashboardStats?.lessonsCreated || "0", change: "+5 Academic Cycle", icon: BookOpen, iconColor: "text-emerald-600" },
-    { label: "Avg. Performance", value: (dashboardStats?.avgPerformance || "78") + "%", change: "+3% Institutional", icon: BarChart3, iconColor: "text-blue-600" },
-    { label: "Attendance Rate", value: (dashboardStats?.attendanceRate || "95") + "%", change: "92% Real-time", icon: TrendingUp, iconColor: "text-orange-600" },
+    { label: "Total Students", value: String(dashboardStats?.totalStudents || "0"), change: "+12% Periodicity", icon: Users, iconColor: "text-indigo-600" },
+    { label: "Plans Created", value: String(dashboardStats?.lessonsCreated || "0"), change: "+5 Academic Cycle", icon: BookOpen, iconColor: "text-emerald-600" },
+    { label: "Avg. Performance", value: String(dashboardStats?.avgPerformance || "78") + "%", change: "+3% Institutional", icon: BarChart3, iconColor: "text-blue-600" },
+    { label: "Attendance Rate", value: String(dashboardStats?.attendanceRate || "95") + "%", change: "92% Real-time", icon: TrendingUp, iconColor: "text-orange-600" },
   ];
 
   return (
