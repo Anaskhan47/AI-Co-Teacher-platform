@@ -15,8 +15,12 @@
   ],
   "routes": [
     {
-      "src": "/api/lessons",
-      "dest": "/api/lessons.ts"
+      "src": "/api/curriculum/metadata",
+      "dest": "/api/curriculum/metadata.ts"
+    },
+    {
+      "src": "/api/curriculum/boards",
+      "dest": "/api/curriculum/boards.ts"
     },
     {
       "src": "/api/dashboard/stats",
@@ -25,18 +29,6 @@
     {
       "src": "/api/students/roster",
       "dest": "/api/students/roster.ts"
-    },
-    {
-      "src": "/api/assignments",
-      "dest": "/api/assignments.ts"
-    },
-    {
-      "src": "/api/curriculum/metadata",
-      "dest": "/api/curriculum/metadata.ts"
-    },
-    {
-      "src": "/api/curriculum/boards",
-      "dest": "/api/curriculum/boards.ts"
     },
     {
       "src": "/api/(.*)",
@@ -50,8 +42,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
