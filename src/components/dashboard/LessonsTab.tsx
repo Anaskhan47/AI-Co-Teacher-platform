@@ -159,7 +159,7 @@ export function LessonsTab({ onLessonSelect }: LessonsTabProps) {
                         </p>
                     </div>
                 ) : (
-                    {(Array.isArray(filteredLessons) ? filteredLessons : []).map((lesson: any) => (
+                    (Array.isArray(filteredLessons) ? filteredLessons : []).map((lesson: any) => (
                         <Card
                             key={lesson.id}
                             onClick={() => onLessonSelect?.(lesson)}

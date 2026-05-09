@@ -143,7 +143,7 @@ const TeacherDashboard = () => {
                 <div key={i} className="h-32 rounded-2xl bg-white border border-slate-100 animate-pulse" />
               ))
             ) : (
-            {(Array.isArray(stats) ? stats : []).map((stat, index) => (
+            (Array.isArray(stats) ? stats : []).map((stat, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 10 }}
@@ -207,7 +207,7 @@ const TeacherDashboard = () => {
                   {lessonsLoading ? (
                     <div className="h-40 flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-indigo-600" /></div>
                   ) : (
-                    {(Array.isArray(lessons) ? lessons : []).slice(0, 5).map((lesson: any) => (
+                    (Array.isArray(lessons) ? lessons : []).slice(0, 5).map((lesson: any) => (
                       <div key={lesson.id} className="flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-slate-50 transition-all cursor-pointer group">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-lg bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 shadow-sm">
