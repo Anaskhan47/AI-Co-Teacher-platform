@@ -43,12 +43,12 @@ const AppRoutes = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/for-teachers" element={<ForTeachers />} />
 
-      {/* Auth Routes - Redirected to Dashboard since we are bypassing auth */}
-      <Route path="/login" element={<Navigate to="/app/dashboard" replace />} />
-      <Route path="/signup" element={<Navigate to="/app/dashboard" replace />} />
+      {/* Auth Routes */}
+      <Route path="/login" element={!user ? <Login /> : <Navigate to="/app/dashboard" replace />} />
+      <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/app/dashboard" replace />} />
 
-      {/* Protected Routes - Now Publicly Accessible */}
-      <Route path="/app" element={<AppLayout />}>
+      {/* Protected Routes */}
+      <Route path="/app" element={user ? <AppLayout /> : <Navigate to="/login" replace />}>
         <Route path="dashboard" element={<TeacherDashboard />} />
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Route>

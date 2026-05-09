@@ -42,17 +42,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 
                 if (storedToken && storedUser) {
                     setUser(JSON.parse(storedUser));
-                } else {
-                    // AUTO-LOGIN BYPASS: Default to a system admin user if none exists
-                    const guestUser = {
-                        id: "guest-teacher-id",
-                        name: "System Administrator",
-                        email: "admin@aicoteacher.com",
-                        role: "TEACHER"
-                    };
-                    setUser(guestUser);
-                    localStorage.setItem('token', 'guest-bypass-token');
-                    localStorage.setItem('user_data', JSON.stringify(guestUser));
                 }
             } catch (error) {
                 console.error("Auth Initialization Error:", error);
