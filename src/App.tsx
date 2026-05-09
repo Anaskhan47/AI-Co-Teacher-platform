@@ -43,19 +43,17 @@ const AppRoutes = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/for-teachers" element={<ForTeachers />} />
 
-      {/* Auth Routes */}
-      <Route path="/login" element={!user ? <Login /> : <Navigate to="/app/dashboard" replace />} />
-      <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/app/dashboard" replace />} />
+      {/* Auth Routes - Redirected to Dashboard since we are bypassing auth */}
+      <Route path="/login" element={<Navigate to="/app/dashboard" replace />} />
+      <Route path="/signup" element={<Navigate to="/app/dashboard" replace />} />
 
-      {/* Protected Routes - Wrapped in AppLayout */}
-      <Route path="/app" element={user ? <AppLayout /> : <Navigate to="/login" replace />}>
+      {/* Protected Routes - Now Publicly Accessible */}
+      <Route path="/app" element={<AppLayout />}>
         <Route path="dashboard" element={<TeacherDashboard />} />
-        {/* Placeholder for other sub-routes if we move to URL-based tabs later */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />
       </Route>
 
-      {/* Other protected legacy routes */}
-      <Route path="/quiz/:id" element={user ? <QuizPage /> : <Navigate to="/login" replace />} />
+      <Route path="/quiz/:id" element={<QuizPage />} />
       <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
 
       <Route path="*" element={<NotFound />} />

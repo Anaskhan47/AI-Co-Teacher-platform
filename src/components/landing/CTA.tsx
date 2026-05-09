@@ -50,17 +50,10 @@ const CTA = () => {
                   className="h-24 px-16 bg-white text-indigo-600 hover:bg-slate-100 shadow-[0_20px_80px_rgba(255,255,255,0.2)] rounded-[2rem] text-lg font-black uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-[0.98] border-none group/btn"
                   asChild
                 >
-                  <Link to="/signup">
-                    Get Started Free
+                  <Link to="/app/dashboard">
+                    Enter Dashboard
                     <ArrowRight className="w-6 h-6 ml-3 transition-transform group-hover/btn:translate-x-2" />
                   </Link>
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="h-24 px-12 text-slate-700 hover:bg-slate-100 rounded-[2rem] text-sm font-black uppercase tracking-[0.3em] transition-all border border-slate-200"
-                  asChild
-                >
-                  <Link to="/login">Initialize Access</Link>
                 </Button>
               </div>
             </div>

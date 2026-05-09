@@ -44,20 +44,10 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-6">
-            {isAuthenticated ? (
-              <Link to="/dashboard" className="h-12 px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-indigo-600/30 transition-all active:scale-95">
-                Terminal Access
-              </Link>
-            ) : (
-              <>
-                <Link to="/login" className="text-[10px] font-black text-slate-500 hover:text-indigo-600 uppercase tracking-widest transition-all px-4 py-2">
-                  Initialize
-                </Link>
-                <Link to="/signup" className="h-12 px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-indigo-600/30 transition-all active:scale-95 border border-indigo-400/20">
-                  Join Collective
-                </Link>
-              </>
-            )}
+            <Link to="/app/dashboard" className="h-12 px-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl flex items-center justify-center font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-indigo-600/30 transition-all active:scale-95 border border-indigo-400/20 gap-2 group">
+              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+              Terminal Access
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -125,33 +115,15 @@ const Navbar = () => {
                 ))}
               </div>
 
-              <div className="p-6 border-t border-slate-100 bg-slate-50/50 space-y-3">
-                {isAuthenticated ? (
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setIsOpen(false)}
-                    className="h-14 w-full flex items-center justify-center bg-indigo-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-600/20"
-                  >
-                    Terminal Access
-                  </Link>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      onClick={() => setIsOpen(false)}
-                      className="h-14 w-full flex items-center justify-center bg-white border border-slate-200 text-slate-600 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-sm"
-                    >
-                      Initialize
-                    </Link>
-                    <Link
-                      to="/signup"
-                      onClick={() => setIsOpen(false)}
-                      className="h-14 w-full flex items-center justify-center bg-indigo-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-600/20"
-                    >
-                      Join Collective
-                    </Link>
-                  </>
-                )}
+              <div className="p-6 border-t border-slate-100 bg-slate-50/50">
+                <Link
+                  to="/app/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className="h-14 w-full flex items-center justify-center bg-indigo-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-indigo-600/20 gap-3"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Terminal Access
+                </Link>
               </div>
             </motion.aside>
           </>
