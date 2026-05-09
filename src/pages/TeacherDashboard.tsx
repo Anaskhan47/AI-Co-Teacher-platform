@@ -194,8 +194,8 @@ const TeacherDashboard = () => {
                             <BookOpen className="w-5 h-5" />
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-slate-900 leading-none mb-1">{lesson.title}</p>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{lesson.subject?.name || 'Academic'} • Grade {lesson.grade || 10}</p>
+                            <p className="text-sm font-bold text-slate-900 leading-none mb-1">{String(lesson?.title || "Untitled")}</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{String(lesson?.subject?.name || 'Academic')} • Grade {String(lesson?.grade || 10)}</p>
                           </div>
                         </div>
                         <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-indigo-600 transition-colors" />

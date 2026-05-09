@@ -170,21 +170,21 @@ export function LessonsTab({ onLessonSelect }: LessonsTabProps) {
                                         </div>
                                         <div>
                                             <div className="flex items-center gap-3 mb-2">
-                                                <h3 className="text-xl font-black text-white group-hover:text-indigo-400 transition-colors leading-none tracking-tight">{lesson.title}</h3>
+                                                <h3 className="text-xl font-black text-white group-hover:text-indigo-400 transition-colors leading-none tracking-tight">{String(lesson.title || "Untitled")}</h3>
                                                 <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded-lg border ${lesson.type === 'QUIZ' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' :
                                                     lesson.type === 'MATERIAL' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
                                                         lesson.type === 'ASSIGNMENT' ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' :
                                                             'bg-blue-500/10 text-blue-400 border-blue-500/20'
                                                     }`}>
-                                                    {lesson.type || 'LESSON'}
+                                                    {String(lesson.type || 'LESSON')}
                                                 </span>
                                             </div>
                                             <div className="flex items-center gap-4">
-                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">{lesson.subject?.name || lesson.subjectName || 'General'}</span>
+                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">{String(lesson.subject?.name || lesson.subjectName || 'General')}</span>
                                                 <span className="w-1 h-1 rounded-full bg-slate-800" />
-                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">{lesson.topic?.name || lesson.topicName || 'Intro'}</span>
+                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">{String(lesson.topic?.name || lesson.topicName || 'Intro')}</span>
                                                 <span className="w-1 h-1 rounded-full bg-slate-800" />
-                                                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">Class {lesson.grade || 10}</span>
+                                                <span className="text-[10px] font-black text-indigo-500 uppercase tracking-[0.2em]">Class {String(lesson.grade || 10)}</span>
                                             </div>
                                         </div>
                                     </div>

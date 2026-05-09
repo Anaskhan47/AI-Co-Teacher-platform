@@ -186,10 +186,10 @@ export function AttendanceTab() {
                       </Avatar>
                       <div className="flex flex-col min-w-0">
                         <span className="font-black text-slate-900 text-sm leading-tight truncate">
-                          {student.user.name}
+                          {String(student?.user?.name || "Student")}
                         </span>
                         <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-1">
-                          ID: #0{idx + 101}
+                          ID: #{String(student?.id || idx + 101)}
                         </span>
                       </div>
                     </div>
