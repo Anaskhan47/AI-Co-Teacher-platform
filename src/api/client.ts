@@ -18,7 +18,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => {
         // Backend contract: always return the envelope `{ success, data, error }`
-        // Normalize here so call-sites are consistent.
+        // Validate JSON response to prevent frontend crashes on 500 HTML pages
+        if (typeof response.data === 'string' && response.data.includes('<!DOCTYPE html>')) {
+            console.error("CRITICAL: Received HTML instead of JSON from API. Server likely crashed.");
+            return { success: false, data: null, error: 'Internal Server Error (HTML Response)' };
+        }
         return response.data;
     },
     (error) => {

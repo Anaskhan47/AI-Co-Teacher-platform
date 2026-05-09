@@ -21,7 +21,7 @@ import {
     Layers
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/store/authStore";
+import { useAuth } from "@/contexts/AuthContext";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ const AppLayout = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const { user, logout } = useAuthStore();
+    const { user, logout } = useAuth();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
