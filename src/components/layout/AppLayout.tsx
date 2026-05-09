@@ -44,15 +44,15 @@ const AppLayout = () => {
     }, [mobileOpen]);
 
     const menuItems = [
-        { name: "Executive Overview", icon: LayoutDashboard, href: "/app/dashboard" },
-        { name: "Curriculum Designer", icon: BookOpen, href: "/app/lesson-plans" },
-        { name: "Examination Builder", icon: ClipboardList, href: "/app/assessments" },
-        { name: "Assignment Vault", icon: FileBox, href: "/app/assignments" },
-        { name: "Student Roster", icon: Users, href: "/app/students" },
-        { name: "Attendance Registry", icon: Clock, href: "/app/attendance" },
-        { name: "Resource Matrix", icon: Layers, href: "/app/resources" },
-        { name: "Communications", icon: MessageSquare, href: "/app/messages" },
-        { name: "System Settings", icon: Settings, href: "/app/settings" },
+        { name: "Executive Overview", icon: LayoutDashboard, href: "/" },
+        { name: "Curriculum Designer", icon: BookOpen, href: "/" },
+        { name: "Examination Builder", icon: ClipboardList, href: "/" },
+        { name: "Assignment Vault", icon: FileBox, href: "/" },
+        { name: "Student Roster", icon: Users, href: "/" },
+        { name: "Attendance Registry", icon: Clock, href: "/" },
+        { name: "Resource Matrix", icon: Layers, href: "/" },
+        { name: "Communications", icon: MessageSquare, href: "/" },
+        { name: "System Settings", icon: Settings, href: "/" },
     ];
 
     const handleLogout = () => {

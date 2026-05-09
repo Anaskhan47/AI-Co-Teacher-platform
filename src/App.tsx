@@ -25,7 +25,7 @@ const AppRoutes = () => {
       <Route path="/" element={<AppLayout />}>
         <Route index element={<TeacherDashboard />} />
         <Route path="dashboard" element={<TeacherDashboard />} />
-        <Route path="app/dashboard" element={<Navigate to="/" replace />} />
+        <Route path="app/*" element={<Navigate to="/" replace />} />
       </Route>
 
       {/* Public / Auth Pages (Accessible but not forced) */}
