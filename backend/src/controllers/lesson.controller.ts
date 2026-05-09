@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AuthRequest } from '../middleware/auth.middleware';
+import { AuthRequest } from '../middleware/auth.middleware.js';
 
 /**
  * ABSOLUTE ZERO LESSONS CONTROLLER
