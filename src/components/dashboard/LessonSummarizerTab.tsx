@@ -115,7 +115,7 @@ export function LessonSummarizerTab() {
             }
         } catch (error: any) {
             setStatus("error");
-            toast.error(error.response?.data?.error || "Error.");
+            toast.error(String(error.response?.data?.error || error.message || "Error."));
         }
     };
 

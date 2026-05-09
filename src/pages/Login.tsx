@@ -108,15 +108,15 @@ const Login = () => {
             <form onSubmit={handleLogin} className="space-y-6">
               <AnimatePresence mode="wait">
                 {error && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="bg-rose-50 border border-rose-100 p-4 rounded-xl flex items-center gap-3 text-rose-600 font-bold text-[11px] uppercase tracking-tight"
-                  >
-                    <AlertCircle className="w-4 h-4 shrink-0" />
-                    {error}
-                  </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="bg-rose-50 border border-rose-100 p-4 rounded-xl flex items-center gap-3 text-rose-600 font-bold text-[11px] uppercase tracking-tight"
+                    >
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      {String(error)}
+                    </motion.div>
                 )}
               </AnimatePresence>
 

@@ -125,7 +125,7 @@ const Signup = () => {
                     className="bg-rose-50 border border-rose-100 p-4 rounded-xl flex items-center gap-3 text-rose-600 font-bold text-[11px] uppercase tracking-tight"
                   >
                     <AlertCircle className="w-4 h-4 shrink-0" />
-                    {error}
+                    {String(error)}
                   </motion.div>
                 )}
               </AnimatePresence>
