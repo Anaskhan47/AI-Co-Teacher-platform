@@ -4,6 +4,9 @@ dotenv.config();
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import helmet from 'helmet';
+import logger from './lib/logger';
+
 import authRoutes from './routes/auth.routes';
 import lessonRoutes from './routes/lesson.routes';
 import attendanceRoutes from './routes/attendance.routes';
@@ -23,26 +26,22 @@ import analysisRoutes from './routes/analysis.routes';
 const app = express();
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// ---- Allowed origins ----
+// ---- Security & Core Middleware ----
+app.use(helmet({
+    contentSecurityPolicy: false, 
+}));
+
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:8080,http://localhost:5173,http://localhost:3000,http://localhost:8081').split(',');
 
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin (e.g. curl, mobile apps)
-        if (!origin) return callback(null, true);
-        
-        // Match localhost with any port in development for ease of use
-        if (origin.startsWith('http://localhost:')) return callback(null, true);
-
-        // Strict matching for production domains
+        if (!origin || origin.startsWith('http://localhost:')) return callback(null, true);
         if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
         
-        // Production fallback: If in production, be stricter. In dev, allow fallback.
         if (NODE_ENV === 'production') {
-            console.error(`[SECURITY] Blocked CORS request from unauthorized origin: ${origin}`);
+            logger.warn(`[SECURITY] CORS Blocked: ${origin}`);
             return callback(new Error('Not allowed by CORS'));
         }
-        
         callback(null, true);
     },
     credentials: true,
@@ -52,38 +51,34 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-const REDACT_KEYS = new Set([
-    'password',
-    'token',
-    'authorization',
-    'pdfText',
-    'file',
-    'content',
-    'body',
-]);
+// ---- ADVANCED LOGGING & REQUEST TRACKING ----
+app.use((req, res, next) => {
+    const start = Date.now();
+    const requestId = Math.random().toString(36).substring(2, 11).toUpperCase();
+    res.setHeader('X-Request-ID', requestId);
 
-function redact(value: unknown, key?: string): unknown {
-    if (key && REDACT_KEYS.has(key)) return '[REDACTED]';
-    if (Array.isArray(value)) return value.map((v) => redact(v));
-    if (value && typeof value === 'object') {
-        const out: Record<string, unknown> = {};
-        for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-            out[k] = redact(v, k);
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        const statusCode = res.statusCode;
+        const logData = {
+            requestId,
+            method: req.method,
+            path: req.originalUrl,
+            status: statusCode,
+            duration: `${duration}ms`,
+            ip: req.ip
+        };
+
+        if (statusCode >= 400) {
+            logger.warn(`API_REQUEST_FAILURE: ${req.method} ${req.originalUrl}`, logData);
+        } else if (NODE_ENV !== 'production') {
+            logger.info(`API_REQUEST_SUCCESS: ${req.method} ${req.originalUrl}`, logData);
         }
-        return out;
-    }
-    if (typeof value === 'string' && value.length > 500) return `${value.substring(0, 500)}...[TRUNCATED]`;
-    return value;
-}
-
-// LOGGING MIDDLEWARE
-app.use((req, _res, next) => {
-    if (NODE_ENV !== 'production') {
-        console.log(`\n[API] ${req.method} ${req.originalUrl}`);
-    }
+    });
     next();
 });
 
+// ---- API Routes ----
 app.use('/api/auth', authRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/attendance', attendanceRoutes);
@@ -100,15 +95,31 @@ app.use('/api/student-dashboard', studentDashboardRoutes);
 app.use('/api/parent-dashboard', parentDashboardRoutes);
 app.use('/api/ai', analysisRoutes);
 
-app.get('/api/health', (_req, res) => res.json({ success: true, data: { status: 'ok', timestamp: new Date().toISOString() }, error: null }));
+app.get('/api/health', (_req, res) => res.json({ 
+    success: true, 
+    data: { status: 'ok', environment: NODE_ENV, uptime: process.uptime() } 
+}));
 
-// GLOBAL ERROR HANDLER
+// ---- ADVANCED GLOBAL ERROR HANDLER ----
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error("CRITICAL SERVER ERROR:", err.stack);
-    res.status(500).json({ 
+    const requestId = res.getHeader('X-Request-ID') || 'INTERNAL';
+    
+    logger.error('UNHANDLED_SERVER_ERROR', {
+        requestId,
+        error: err.message,
+        stack: err.stack,
+        path: req.originalUrl,
+        method: req.method
+    });
+
+    res.status(err.status || 500).json({ 
         success: false,
         data: null,
-        error: typeof err.message === 'string' ? err.message : "Internal Server Error"
+        error: NODE_ENV === 'production' 
+            ? "An internal processing error occurred. Our engineers have been notified." 
+            : err.message,
+        requestId,
+        timestamp: new Date().toISOString()
     });
 });
 

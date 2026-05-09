@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
 import prisma from '../lib/prisma';
+import logger from '../lib/logger';
 import { AIService } from '../services/ai.service';
 import { BoardType } from '@prisma/client';
 import fs from 'fs';
@@ -8,7 +9,11 @@ import pdfParse from "pdf-parse";
 import { resolveCurriculumTopic } from '../lib/curriculum-resolver';
 
 export const createLesson = async (req: AuthRequest, res: Response) => {
+    const requestId = res.getHeader('X-Request-ID') as string || 'INTERNAL';
+    
     try {
+        logger.info('CREATE_LESSON_PROTOCOL_INITIATED', { requestId, teacherId: req.user?.id });
+
         let { title, subjectId, topicId, grade, objective, duration, activities, homework, resources, aiAssist, curriculum: board, subject: subjectName, topic: topicName, pdfText, unitDetails, numSessions, detailLevel } = req.body;
 
         let finalSubjectId = subjectId;
@@ -16,6 +21,7 @@ export const createLesson = async (req: AuthRequest, res: Response) => {
 
         // --- DYNAMIC ENTITY RESOLUTION (transactional, deduplicated) ---
         if (board && grade && subjectName && topicName) {
+            logger.debug('RESOLVING_CURRICULUM_ENTITIES', { requestId, board, grade, subjectName, topicName });
             const gradeNum = parseInt(grade);
             const { subject, topic } = await resolveCurriculumTopic(prisma, {
                 board: board as BoardType,
@@ -31,6 +37,7 @@ export const createLesson = async (req: AuthRequest, res: Response) => {
         let aiData: any = null;
         let aiMeta: any = null;
         if (aiAssist || (board && grade)) {
+            logger.info('INVOKING_AI_SYNTHESIS_ENGINE', { requestId, topicName });
             let sName = subjectName;
             let tName = topicName;
 
@@ -43,7 +50,10 @@ export const createLesson = async (req: AuthRequest, res: Response) => {
                 tName = t?.name;
             }
 
-            if (!tName || !sName) return res.status(400).json({ success: false, data: null, error: 'Invalid Subject or Topic context' });
+            if (!tName || !sName) {
+                logger.warn('AI_SYNTHESIS_ABORTED: Missing Context', { requestId });
+                return res.status(400).json({ success: false, data: null, error: 'Invalid Subject or Topic context' });
+            }
 
             const result = await AIService.generateLessonPlan(tName, grade || "10", sName, pdfText, unitDetails, duration, numSessions, Number(detailLevel) || 50);
             aiData = result.data;
@@ -53,6 +63,7 @@ export const createLesson = async (req: AuthRequest, res: Response) => {
         const teacherId = req.user?.id;
         if (!teacherId) return res.status(401).json({ success: false, data: null, error: "Unauthorized" });
 
+        logger.info('PERSISTING_LESSON_TO_DATABASE', { requestId, title: title || aiData?.title });
         const lesson = await prisma.lessonPlan.create({
             data: {
                 title: title || aiData?.title || `Lesson: ${topicName || 'Generated'}`,
@@ -76,26 +87,50 @@ export const createLesson = async (req: AuthRequest, res: Response) => {
             }
         });
 
+        logger.info('CREATE_LESSON_SUCCESS', { requestId, lessonId: lesson.id });
         res.status(201).json({ success: true, data: { ...lesson, aiMeta }, error: null });
     } catch (error: any) {
-        console.error("CRITICAL: Create Lesson Error:\n", error.stack);
-        res.status(500).json({ success: false, data: null, error: error.message || 'Failed to create lesson plan' });
+        logger.error('CREATE_LESSON_FAILURE', { requestId, error: error.message, stack: error.stack });
+        res.status(500).json({ 
+            success: false, 
+            data: null, 
+            error: process.env.NODE_ENV === 'production' ? 'Intelligence synthesis failed.' : error.message 
+        });
     }
 };
 
 export const getLessons = async (req: AuthRequest, res: Response) => {
+    const requestId = res.getHeader('X-Request-ID') as string || 'INTERNAL';
+    
     try {
+        logger.info('FETCH_LESSONS_PROTOCOL_INITIATED', { requestId, teacherId: req.user!.id });
+
         const limitRaw = (req.query.limit as string) || '50';
         const limit = Math.min(Math.max(parseInt(limitRaw) || 50, 1), 100);
-        const lessons = await prisma.lessonPlan.findMany({
+
+        // --- SAFETY: 30s TIMEOUT ---
+        const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('DATABASE_OPERATION_TIMEOUT_30S')), 30000)
+        );
+
+        const fetchPromise = prisma.lessonPlan.findMany({
             where: { teacherId: req.user!.id },
             include: { subject: true, topic: true },
             orderBy: { updatedAt: 'desc' },
             take: limit,
         });
+
+        const lessons = await Promise.race([fetchPromise, timeoutPromise]) as any;
+
+        logger.info('FETCH_LESSONS_SUCCESS', { requestId, count: lessons.length });
         res.json({ success: true, data: lessons, error: null });
     } catch (error: any) {
-        res.status(500).json({ success: false, data: null, error: error.message || 'Failed to fetch lessons' });
+        logger.error('FETCH_LESSONS_FAILURE', { requestId, error: error.message, stack: error.stack });
+        res.status(500).json({ 
+            success: false, 
+            data: null, 
+            error: process.env.NODE_ENV === 'production' ? 'Failed to synchronize lesson library.' : error.message 
+        });
     }
 };
 
