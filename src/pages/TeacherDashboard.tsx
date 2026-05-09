@@ -172,7 +172,7 @@ const TeacherDashboard = () => {
               {/* Quick Access */}
               <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm space-y-6">
                 <div>
-                  <h3 className="text-xl font-black text-slate-900 tracking-tight uppercase">Operational Hub</h3>
+                  <h3 className="text-xl font-black text-slate-900 tracking-tight uppercase">Operational Hub [STABLE-V1]</h3>
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">High-performance AI synthesis modules</p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
