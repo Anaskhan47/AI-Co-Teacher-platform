@@ -1,46 +1,40 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/**/*.ts",
-      "use": "@vercel/node"
+      "source": "/api/curriculum/metadata",
+      "destination": "/api/curriculum/metadata.ts"
     },
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "source": "/api/curriculum/boards",
+      "destination": "/api/curriculum/boards.ts"
+    },
+    {
+      "source": "/api/dashboard/stats",
+      "destination": "/api/dashboard/stats.ts"
+    },
+    {
+      "source": "/api/students/roster",
+      "destination": "/api/students/roster.ts"
+    },
+    {
+      "source": "/api/lessons",
+      "destination": "/api/lessons.ts"
+    },
+    {
+      "source": "/api/assignments",
+      "destination": "/api/assignments.ts"
+    },
+    {
+      "source": "/app/(.*)",
+      "destination": "/"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/curriculum/metadata",
-      "dest": "/api/curriculum/metadata.ts"
-    },
-    {
-      "src": "/api/curriculum/boards",
-      "dest": "/api/curriculum/boards.ts"
-    },
-    {
-      "src": "/api/dashboard/stats",
-      "dest": "/api/dashboard/stats.ts"
-    },
-    {
-      "src": "/api/students/roster",
-      "dest": "/api/students/roster.ts"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.ts"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
