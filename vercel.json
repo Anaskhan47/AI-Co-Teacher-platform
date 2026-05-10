@@ -2,35 +2,11 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/curriculum/metadata",
-      "destination": "/api/curriculum/metadata.ts"
-    },
-    {
-      "source": "/api/curriculum/boards",
-      "destination": "/api/curriculum/boards.ts"
-    },
-    {
-      "source": "/api/dashboard/stats",
-      "destination": "/api/dashboard/stats.ts"
-    },
-    {
-      "source": "/api/students/roster",
-      "destination": "/api/students/roster.ts"
-    },
-    {
-      "source": "/api/lessons",
-      "destination": "/api/lessons.ts"
-    },
-    {
-      "source": "/api/assignments",
-      "destination": "/api/assignments.ts"
-    },
-    {
       "source": "/app/(.*)",
       "destination": "/"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
