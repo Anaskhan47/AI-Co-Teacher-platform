@@ -123,12 +123,14 @@ const AppLayout = () => {
                                                     (item.href === "/?tab=dashboard" && (location.pathname + location.search === "/" || location.pathname + location.search === "/?tab=dashboard"));
 
                                     return (
-                                        <Link
+                                        <button
                                             key={item.name}
-                                            to={item.href}
-                                            onClick={() => setMobileOpen(false)}
+                                            onClick={() => {
+                                                navigate(item.href);
+                                                setMobileOpen(false);
+                                            }}
                                             className={cn(
-                                                "flex items-center gap-4 h-14 px-4 rounded-2xl transition-all duration-300 group",
+                                                "w-full flex items-center gap-4 h-14 px-4 rounded-2xl transition-all duration-300 group text-left",
                                                 isActive
                                                     ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
                                                     : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600"
@@ -136,9 +138,10 @@ const AppLayout = () => {
                                         >
                                             <item.icon className={cn("w-5 h-5 shrink-0", isActive ? "text-white" : "text-slate-400 group-hover:text-indigo-600")} />
                                             <span className="font-black text-[11px] uppercase tracking-widest">{item.name}</span>
-                                        </Link>
+                                        </button>
                                     );
                                 })}
+
                         </nav>
 
 
@@ -195,11 +198,11 @@ const AppLayout = () => {
                                        (item.href === "/?tab=dashboard" && (location.pathname + location.search === "/" || location.pathname + location.search === "/?tab=dashboard"));
 
                         return (
-                            <Link
+                            <button
                                 key={item.name}
-                                to={item.href}
+                                onClick={() => navigate(item.href)}
                                 className={cn(
-                                    "flex items-center h-12 px-4 rounded-2xl transition-all duration-300 group relative",
+                                    "w-full flex items-center h-12 px-4 rounded-2xl transition-all duration-300 group relative text-left",
                                     isActive
                                         ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/15"
                                         : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600",
@@ -214,9 +217,10 @@ const AppLayout = () => {
                                         {item.name}
                                     </div>
                                 )}
-                            </Link>
+                            </button>
                         );
                     })}
+
 
                 </nav>
 
