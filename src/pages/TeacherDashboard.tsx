@@ -49,9 +49,17 @@ import { useAuth } from "@/contexts/AuthContext";
 import { MobileNav } from "@/components/layout/MobileNav";
 
 const TeacherDashboard = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [searchParams] = useSearchParams();
+  const urlTab = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(urlTab || "dashboard");
   const [assistantMode, setAssistantMode] = useState<"lesson" | "material" | "quiz">("lesson");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (urlTab) {
+      setActiveTab(urlTab);
+    }
+  }, [urlTab]);
 
   const menuItems = [
     { id: "dashboard", icon: LayoutDashboard, label: "Overview" },
@@ -273,11 +281,39 @@ const TeacherDashboard = () => {
         <AttendanceTab />
       ) : activeTab === "students" ? (
         <StudentsTab />
+      ) : activeTab === "messages" ? (
+        <MessagesTab />
+      ) : activeTab === "settings" ? (
+        <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-700">
+            <div className="bg-white p-12 rounded-[3rem] border border-slate-200 shadow-sm text-center space-y-6">
+                <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto border border-slate-100">
+                    <Settings className="w-10 h-10 text-slate-400 animate-[spin_10s_linear_infinite]" />
+                </div>
+                <div>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight uppercase">System Configuration</h3>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2 max-w-xs mx-auto">Fine-tune your AI Co-Teacher experience and institutional parameters</p>
+                </div>
+                <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+                    {['Profile Synthesis', 'Notification Matrix', 'AI Governance', 'Security Protocols'].map(item => (
+                        <div key={item} className="p-6 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between group cursor-pointer hover:bg-white hover:border-indigo-600 transition-all">
+                            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{item}</span>
+                            <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-indigo-600 transition-colors" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
       ) : (
-        <div className="h-64 flex items-center justify-center bg-white rounded-[2rem] border border-dashed border-slate-200">
-          <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest">Module Synchronization Pending...</p>
+        <div className="h-96 flex items-center justify-center bg-white rounded-[3rem] border border-dashed border-slate-200 animate-pulse">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto border border-slate-100">
+                <Loader2 className="w-8 h-8 text-slate-200 animate-spin" />
+            </div>
+            <p className="text-slate-400 font-black text-[10px] uppercase tracking-[0.3em]">Module Synchronization Pending...</p>
+          </div>
         </div>
       )}
+
     </div>
   );
 };

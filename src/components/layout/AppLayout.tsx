@@ -65,16 +65,17 @@ const AppLayout = () => {
 
 
     const menuItems = [
-        { name: "Executive Overview", icon: LayoutDashboard, href: "/" },
-        { name: "Curriculum Designer", icon: BookOpen, href: "/" },
-        { name: "Examination Builder", icon: ClipboardList, href: "/" },
-        { name: "Assignment Vault", icon: FileBox, href: "/" },
-        { name: "Student Roster", icon: Users, href: "/" },
-        { name: "Attendance Registry", icon: Clock, href: "/" },
-        { name: "Resource Matrix", icon: Layers, href: "/" },
-        { name: "Communications", icon: MessageSquare, href: "/" },
-        { name: "System Settings", icon: Settings, href: "/" },
+        { name: "Executive Overview", icon: LayoutDashboard, href: "/?tab=dashboard" },
+        { name: "Curriculum Designer", icon: BookOpen, href: "/?tab=generator" },
+        { name: "Examination Builder", icon: ClipboardList, href: "/?tab=exams" },
+        { name: "Assignment Vault", icon: FileBox, href: "/?tab=assignments" },
+        { name: "Student Roster", icon: Users, href: "/?tab=students" },
+        { name: "Attendance Registry", icon: Clock, href: "/?tab=attendance" },
+        { name: "Resource Matrix", icon: Layers, href: "/?tab=summarizer" },
+        { name: "Communications", icon: MessageSquare, href: "/?tab=messages" },
+        { name: "System Settings", icon: Settings, href: "/?tab=settings" },
     ];
+
 
     const handleLogout = () => {
         logout();
