@@ -118,6 +118,7 @@ const AppLayout = () => {
 
                         <nav className="flex-1 px-5 py-10 space-y-2 overflow-y-auto custom-scrollbar">
                             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 px-3">Administrative Control</p>
+                            {menuItems.map((item) => {
                                     const isActive = location.pathname + location.search === item.href || 
                                                     (item.href === "/?tab=dashboard" && (location.pathname + location.search === "/" || location.pathname + location.search === "/?tab=dashboard"));
 
@@ -138,8 +139,8 @@ const AppLayout = () => {
                                         </Link>
                                     );
                                 })}
-
                         </nav>
+
 
                         <div className="p-6 border-t border-slate-100 bg-slate-50/50">
                             <button onClick={handleLogout} className="w-full flex items-center gap-4 h-14 px-4 rounded-2xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all font-black text-[11px] uppercase tracking-widest group">
