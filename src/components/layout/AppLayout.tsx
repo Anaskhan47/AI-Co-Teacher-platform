@@ -118,22 +118,27 @@ const AppLayout = () => {
 
                         <nav className="flex-1 px-5 py-10 space-y-2 overflow-y-auto custom-scrollbar">
                             <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 px-3">Administrative Control</p>
-                            {menuItems.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    to={item.href}
-                                    onClick={() => setMobileOpen(false)}
-                                    className={cn(
-                                        "flex items-center gap-4 h-14 px-4 rounded-2xl transition-all duration-300 group",
-                                        location.pathname === item.href
-                                            ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
-                                            : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600"
-                                    )}
-                                >
-                                    <item.icon className={cn("w-5 h-5 shrink-0", location.pathname === item.href ? "text-white" : "text-slate-400 group-hover:text-indigo-600")} />
-                                    <span className="font-black text-[11px] uppercase tracking-widest">{item.name}</span>
-                                </Link>
-                            ))}
+                                    const isActive = location.pathname + location.search === item.href || 
+                                                    (item.href === "/?tab=dashboard" && (location.pathname + location.search === "/" || location.pathname + location.search === "/?tab=dashboard"));
+
+                                    return (
+                                        <Link
+                                            key={item.name}
+                                            to={item.href}
+                                            onClick={() => setMobileOpen(false)}
+                                            className={cn(
+                                                "flex items-center gap-4 h-14 px-4 rounded-2xl transition-all duration-300 group",
+                                                isActive
+                                                    ? "bg-indigo-600 text-white shadow-xl shadow-indigo-600/20"
+                                                    : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600"
+                                            )}
+                                        >
+                                            <item.icon className={cn("w-5 h-5 shrink-0", isActive ? "text-white" : "text-slate-400 group-hover:text-indigo-600")} />
+                                            <span className="font-black text-[11px] uppercase tracking-widest">{item.name}</span>
+                                        </Link>
+                                    );
+                                })}
+
                         </nav>
 
                         <div className="p-6 border-t border-slate-100 bg-slate-50/50">
@@ -184,28 +189,34 @@ const AppLayout = () => {
                     <p className={cn("text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 mb-6 px-4", collapsed && "text-center")}>
                         {collapsed ? "NAV" : "Institutional Nexus"}
                     </p>
-                    {menuItems.map((item) => (
-                        <Link
-                            key={item.name}
-                            to={item.href}
-                            className={cn(
-                                "flex items-center h-12 px-4 rounded-2xl transition-all duration-300 group relative",
-                                location.pathname === item.href
-                                    ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/15"
-                                    : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600",
-                                collapsed ? "justify-center" : "gap-4"
-                            )}
-                        >
-                            <item.icon className={cn("w-5 h-5 shrink-0 transition-transform group-hover:scale-110", location.pathname === item.href ? "text-white" : "text-slate-400 group-hover:text-indigo-600")} />
-                            {!collapsed && <span className="font-black text-[11px] uppercase tracking-widest truncate">{item.name}</span>}
-                            
-                            {collapsed && (
-                                <div className="absolute left-full ml-6 px-4 py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 shadow-2xl z-50">
-                                    {item.name}
-                                </div>
-                            )}
-                        </Link>
-                    ))}
+                    {menuItems.map((item) => {
+                        const isActive = location.pathname + location.search === item.href || 
+                                       (item.href === "/?tab=dashboard" && (location.pathname + location.search === "/" || location.pathname + location.search === "/?tab=dashboard"));
+
+                        return (
+                            <Link
+                                key={item.name}
+                                to={item.href}
+                                className={cn(
+                                    "flex items-center h-12 px-4 rounded-2xl transition-all duration-300 group relative",
+                                    isActive
+                                        ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/15"
+                                        : "text-slate-500 hover:bg-slate-50 hover:text-indigo-600",
+                                    collapsed ? "justify-center" : "gap-4"
+                                )}
+                            >
+                                <item.icon className={cn("w-5 h-5 shrink-0 transition-transform group-hover:scale-110", isActive ? "text-white" : "text-slate-400 group-hover:text-indigo-600")} />
+                                {!collapsed && <span className="font-black text-[11px] uppercase tracking-widest truncate">{item.name}</span>}
+                                
+                                {collapsed && (
+                                    <div className="absolute left-full ml-6 px-4 py-2.5 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl opacity-0 group-hover:opacity-100 pointer-events-none transition-all translate-x-[-10px] group-hover:translate-x-0 shadow-2xl z-50">
+                                        {item.name}
+                                    </div>
+                                )}
+                            </Link>
+                        );
+                    })}
+
                 </nav>
 
                 <div className="p-6 border-t border-slate-100 bg-slate-50/30">

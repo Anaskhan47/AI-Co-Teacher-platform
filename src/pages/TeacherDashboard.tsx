@@ -49,17 +49,15 @@ import { useAuth } from "@/contexts/AuthContext";
 import { MobileNav } from "@/components/layout/MobileNav";
 
 const TeacherDashboard = () => {
-  const [searchParams] = useSearchParams();
-  const urlTab = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState(urlTab || "dashboard");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || "dashboard";
   const [assistantMode, setAssistantMode] = useState<"lesson" | "material" | "quiz">("lesson");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (urlTab) {
-      setActiveTab(urlTab);
-    }
-  }, [urlTab]);
+  const setActiveTab = (tabId: string) => {
+    setSearchParams({ tab: tabId });
+  };
+
 
   const menuItems = [
     { id: "dashboard", icon: LayoutDashboard, label: "Overview" },
