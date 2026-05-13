@@ -47,9 +47,9 @@ const ParentDashboard = () => {
     const child = parentData?.children?.[0];
 
     const stats = [
-        { label: "Attendance Rate", value: (parentData?.stats.attendanceRate || "0") + "%", sub: "Institutional benchmark: 95%", icon: Calendar, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-        { label: "Overall Performance", value: (parentData?.stats.avgGrade || "0") + "%", sub: "Cohort average: 72%", icon: Award, color: "text-indigo-400", bg: "bg-indigo-500/10" },
-        { label: "Pending Tasks", value: parentData?.stats.pendingAssignments || "0", sub: "Next deadline: Friday", icon: Clock, color: "text-amber-400", bg: "bg-amber-500/10" },
+        { label: "Attendance Rate", value: (parentData?.stats?.attendanceRate ?? "0") + "%", sub: "Institutional benchmark: 95%", icon: Calendar, color: "text-emerald-600", bg: "bg-emerald-50" },
+        { label: "Overall Performance", value: (parentData?.stats?.avgGrade ?? "0") + "%", sub: "Cohort average: 72%", icon: Award, color: "text-indigo-600", bg: "bg-indigo-50" },
+        { label: "Pending Tasks", value: String(parentData?.stats?.pendingAssignments ?? "0"), sub: "Next deadline: Friday", icon: Clock, color: "text-amber-600", bg: "bg-amber-50" },
     ];
 
     return (
@@ -111,7 +111,7 @@ const ParentDashboard = () => {
                                     Guardian Uplink
                                 </div>
                                 <h1 className="text-xl lg:text-3xl font-black tracking-tight text-slate-900 leading-none">Parent Dashboard</h1>
-                                <p className="text-slate-500 text-xs hidden lg:block font-medium mt-1.5">Academic monitoring for <span className="text-indigo-600 font-bold">{child?.user.name}</span></p>
+                                <p className="text-slate-500 text-xs hidden lg:block font-medium mt-1.5">Academic monitoring for <span className="text-indigo-600 font-bold">{String(child?.user?.name || 'Student')}</span></p>
                             </div>
                         </div>
                         <div className="flex items-center gap-3 lg:gap-6">
@@ -166,20 +166,20 @@ const ParentDashboard = () => {
                                 <TrendingUp className="w-5 h-5 text-emerald-500" />
                             </div>
                             <div className="space-y-4">
-                                {child?.grades.map((grade: any) => (
-                                    <div key={grade.id} className="flex items-center justify-between p-5 rounded-2xl bg-white/5 border border-white/5 hover:border-indigo-500/30 hover:bg-white/10 transition-all group">
+                                {(Array.isArray(child?.grades) ? child.grades : []).map((grade: any) => (
+                                    <div key={grade.id} className="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-200 hover:bg-white transition-all group">
                                         <div className="flex items-center gap-5">
-                                            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+                                            <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">
                                                 <BarChart3 className="w-6 h-6" />
                                             </div>
                                             <div>
-                                                <p className="font-bold text-white text-base tracking-tight mb-0.5">{grade.type}</p>
-                                                <p className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">{new Date(grade.gradedAt).toLocaleDateString()}</p>
+                                                <p className="font-bold text-slate-900 text-base tracking-tight mb-0.5">{String(grade?.type || "Assessment")}</p>
+                                                <p className="text-[8px] text-slate-400 font-bold uppercase tracking-widest">{new Date(grade?.gradedAt || Date.now()).toLocaleDateString()}</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="font-bold text-xl tracking-tight text-indigo-400">{grade.score}/{grade.maxScore}</p>
-                                            <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">Verified Result</p>
+                                            <p className="font-bold text-xl tracking-tight text-indigo-600">{grade?.score}/{grade?.maxScore}</p>
+                                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Verified Result</p>
                                         </div>
                                     </div>
                                 ))}
@@ -192,12 +192,12 @@ const ParentDashboard = () => {
                             <Card className="border border-white/5 bg-slate-950/50 backdrop-blur-3xl p-8 rounded-2xl shadow-2xl">
                                 <h3 className="text-xl font-bold text-white tracking-tight uppercase mb-8">Sync Log: Attendance</h3>
                                 <div className="flex gap-2 mb-8">
-                                    {child?.attendance.slice(0, 7).map((log: any) => (
+                                    {(Array.isArray(child?.attendance) ? child.attendance : []).slice(0, 7).map((log: any) => (
                                         <div
                                             key={log.id}
-                                            className={`flex-1 h-12 rounded-xl flex items-center justify-center font-bold text-[10px] border transition-all ${log.status === 'PRESENT' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-lg shadow-emerald-500/10' : 'bg-rose-500/10 text-rose-400 border-rose-500/20'}`}
+                                            className={`flex-1 h-12 rounded-xl flex items-center justify-center font-bold text-[10px] border transition-all ${log.status === 'PRESENT' ? 'bg-emerald-50 text-emerald-600 border-emerald-100 shadow-sm' : 'bg-rose-50 text-rose-600 border-rose-100'}`}
                                         >
-                                            {new Date(log.date).getDate()}
+                                            {new Date(log?.date || Date.now()).getDate()}
                                         </div>
                                     ))}
                                 </div>
@@ -214,21 +214,21 @@ const ParentDashboard = () => {
                                         <MessageSquare className="w-5 h-5 opacity-50" />
                                     </div>
                                     <div className="space-y-4">
-                                        {parentData?.recentMessages.map((msg: any) => (
+                                        {(Array.isArray(parentData?.recentMessages) ? parentData.recentMessages : []).map((msg: any) => (
                                             <div key={msg.id} className="p-4 bg-white/10 rounded-2xl backdrop-blur-xl border border-white/10 group-hover:bg-white/15 transition-all">
                                                 <div className="flex items-center gap-3 mb-2">
                                                     <Avatar className="w-7 h-7 border border-white/10">
-                                                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${msg.sender?.name || 'System'}`} />
+                                                        <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${msg?.sender?.name || 'System'}`} />
                                                     </Avatar>
                                                     <div>
-                                                        <p className="text-[9px] font-bold uppercase tracking-widest leading-none">{msg.sender?.name || 'System'}</p>
-                                                        <p className="text-[8px] opacity-40 uppercase tracking-widest">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                                        <p className="text-[9px] font-bold uppercase tracking-widest leading-none">{msg?.sender?.name || 'System'}</p>
+                                                        <p className="text-[8px] opacity-40 uppercase tracking-widest">{safeTime(msg?.createdAt)}</p>
                                                     </div>
                                                 </div>
-                                                <p className="text-xs font-medium leading-relaxed line-clamp-2">{msg.content}</p>
+                                                <p className="text-xs font-medium leading-relaxed line-clamp-2">{msg?.content}</p>
                                             </div>
                                         ))}
-                                        {parentData?.recentMessages.length === 0 && (
+                                        {(!parentData?.recentMessages || parentData.recentMessages.length === 0) && (
                                             <p className="text-indigo-100 text-[9px] font-bold uppercase tracking-widest opacity-60 text-center py-6">No active messages recorded.</p>
                                         )}
                                     </div>

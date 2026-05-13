@@ -1,44 +1,15 @@
 {
   "version": 2,
+  "buildCommand": "prisma generate --schema=backend/src/prisma/schema.prisma && vite build",
+  "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/api/curriculum/metadata",
-      "destination": "/api/curriculum/metadata.ts"
-    },
-    {
-      "source": "/api/curriculum/boards",
-      "destination": "/api/curriculum/boards.ts"
-    },
-    {
-      "source": "/api/dashboard/stats",
-      "destination": "/api/dashboard/stats.ts"
-    },
-    {
-      "source": "/api/students/roster",
-      "destination": "/api/students/roster.ts"
-    },
-    {
-      "source": "/api/lessons",
-      "destination": "/api/lessons.ts"
-    },
-    {
-      "source": "/api/assignments",
-      "destination": "/api/assignments.ts"
-    },
-    {
-      "source": "/api/attendance",
-      "destination": "/api/attendance.ts"
-    },
-    {
-      "source": "/app/(.*)",
-      "destination": "/"
+      "source": "/api/(.*)",
+      "destination": "/api/[...path]"
     },
     {
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }

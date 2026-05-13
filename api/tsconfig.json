@@ -11,7 +11,10 @@
     "outDir": "../dist-api",
     "allowJs": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "paths": {
+      "@/*": ["../src/*"]
+    }
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "../backend/src/**/*.ts"]
 }

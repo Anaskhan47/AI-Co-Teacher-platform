@@ -17,14 +17,8 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    // FORCE GUEST SESSION FOR STABILIZATION
-    const [user, setUser] = useState<any | null>({
-        id: 'guest-bypass',
-        name: 'Guest Administrator',
-        email: 'guest@ai-coteacher.local',
-        role: 'ADMIN'
-    });
-    const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const manualLogin = useCallback((userData: any, token: string) => {
         localStorage.setItem('token', token);
@@ -33,16 +27,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const logout = useCallback(() => {
-        // Disabled logout for bypass mode
+        localStorage.removeItem('token');
+        localStorage.removeItem('user_data');
+        setUser(null);
+        window.location.href = '/login';
     }, []);
 
     useEffect(() => {
-        // Ensure token is present for API calls
-        if (!localStorage.getItem('token')) {
-            localStorage.setItem('token', 'guest-bypass-token');
+        try {
+            const savedUser = localStorage.getItem('user_data');
+            const token = localStorage.getItem('token');
+            
+            if (savedUser && token) {
+                setUser(JSON.parse(savedUser));
+            } else if (!token) {
+                // Initial fallback for first-time visitors in demo mode
+                // localStorage.setItem('token', 'guest-bypass-token');
+                // setUser({ id: 'guest-bypass', name: 'Guest Admin', role: 'ADMIN' });
+            }
+        } catch (e) {
+            console.error("Auth hydration failed:", e);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, []);
+
 
     const value = useMemo(() => ({
         user,

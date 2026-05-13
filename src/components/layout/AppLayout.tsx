@@ -43,6 +43,27 @@ const AppLayout = () => {
         return () => { document.body.style.overflow = 'unset'; };
     }, [mobileOpen]);
 
+    const { loading: authLoading } = useAuth();
+
+    useEffect(() => {
+        if (!authLoading && !user) {
+            navigate("/login");
+        }
+    }, [user, authLoading, navigate]);
+
+    if (authLoading) {
+        return (
+            <div className="h-screen w-screen flex items-center justify-center bg-slate-50 flex-col gap-6">
+                <div className="w-20 h-20 bg-indigo-600/10 rounded-[2rem] border border-indigo-500/20 flex items-center justify-center relative">
+                    <div className="absolute inset-0 rounded-[2rem] border-4 border-indigo-500/30 border-t-indigo-500 animate-spin" />
+                    <GraduationCap className="w-10 h-10 text-indigo-400" />
+                </div>
+                <p className="text-slate-500 font-black uppercase tracking-widest text-xs animate-pulse">Initializing System...</p>
+            </div>
+        );
+    }
+
+
     const menuItems = [
         { name: "Executive Overview", icon: LayoutDashboard, href: "/" },
         { name: "Curriculum Designer", icon: BookOpen, href: "/" },
